@@ -17,6 +17,12 @@ CCACHE_BIN = $$system(which ccache)
     QMAKE_CXXFLAGS +=-g -fdebug-prefix-map=$(shell pwd)=.
 }
 
+
+
+!windows{
+    error("NOT WINDOWS BUILD")
+}
+
 QT += network
 QT += quick
 QT += widgets
