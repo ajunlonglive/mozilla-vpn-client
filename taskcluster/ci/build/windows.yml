@@ -3,7 +3,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ---
 
-
 windows/debug:
         description: "Windows Build"
         treeherder:
@@ -20,7 +19,7 @@ windows/debug:
                 - windows-qt-compile
 
         worker:
-            taskcluster-proxy: true
+            taskcluster-proxy: false
             chain-of-trust: true
             max-run-time: 3600
             artifacts:
