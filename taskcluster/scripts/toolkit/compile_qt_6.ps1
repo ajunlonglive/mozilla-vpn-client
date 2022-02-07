@@ -3,11 +3,6 @@
 # Enter the DEV Shell
 ./$PSScriptRoot/enter_dev_shell.ps1
 
-$BUILD_TOOLS_DIR = "C:\MozillaVPNBuild"
-$QT_SRC_SUBDIR = "qt-everywhere-src-6.2.3"
-
-$env:Path += ";$env:PERL_PATH"
-
 
 # Debugging stuff for basti 
 write-output("-- ENV --")
@@ -17,6 +12,11 @@ write-output("-- DIR --")
 Get-ChildItem .
 Get-ChildItem fetches
 write-output("-- DIR --")
+write-output("-- PATH --")
+foreach ($path in $env:path -Split ";") {
+    Get-ChildItem -Path $path/*.exe -Name
+}
+write-output("-- PATH --")
 
 # Enter QT source directory
 Set-Location $env:QT_PATH

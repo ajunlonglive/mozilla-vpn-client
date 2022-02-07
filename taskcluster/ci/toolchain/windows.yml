@@ -12,7 +12,7 @@ windows-qt-compile:
     description: "Windows QT compile Task"
     fetches:
         fetch:
-            - win-perl
+#            - win-perl
             - win-dev-env
             - qt-6.2.3-source
     run:
