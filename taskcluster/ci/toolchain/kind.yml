@@ -4,18 +4,14 @@
 ---
 loader: taskgraph.loader.transform:loader
 
-transforms:
-    - mozillavpn_taskgraph.transforms.build:transforms
-    - taskgraph.transforms.job:transforms
-    - taskgraph.transforms.task:transforms
-
 kind-dependencies:
     - fetch
-    - toolchain
+
+transforms:
+    - taskgraph.transforms.job:transforms
+    - taskgraph.transforms.cached_tasks:transforms
+    - taskgraph.transforms.task:transforms
+
 
 jobs-from:
-    - linux.yml
     - windows.yml
-    - android.yml
-#    - mac.yml
-
