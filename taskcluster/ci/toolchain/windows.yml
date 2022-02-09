@@ -25,12 +25,38 @@ windows-qt-compile:
     attributes:
       toolchain-alias: toolchain-windows-qt-compile
       toolchain-artifact: public/qt6_win
+    scopes:
+        - project:releng:services/tooltool/api/download/public
+        - project:releng:services/tooltool/api/download/internal
     worker:
+        taskcluster-proxy: true
         max-run-time: 14400
         artifacts:
             - type: directory
               name: qt6_win
               path: QTBIN
+        env:
+            PERL_PATH: fetches/perl/perl/bin
+            VSSTUDIO_PATH: fetches/VisualStudio
+            QT_PATH: fetches/qt-everywhere-src-6.2.3
+            PYTHONHTTPSVERIFY: "0"
+    worker-type: b-win2012
+
+windows-testing:
+    description: "Windows Debug Testing Task"
+    run:
+        using: run-task
+        cwd: '{checkout}'
+        command: taskcluster/scripts/toolkit/test.sh     
+    treeherder:
+        symbol: TL(test)
+        platform: toolchains/win
+    scopes:
+        - project:releng:services/tooltool/api/download/public
+        - project:releng:services/tooltool/api/download/internal
+    worker:
+        taskcluster-proxy: true
+        max-run-time: 14400
         env:
             PERL_PATH: fetches/perl/perl/bin
             VSSTUDIO_PATH: fetches/VisualStudio

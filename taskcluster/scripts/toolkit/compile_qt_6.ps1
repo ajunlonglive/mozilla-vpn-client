@@ -18,8 +18,12 @@ foreach ($path in $env:path -Split ";") {
 }
 write-output("-- PATH --")
 
+if(!(Test-Path QTBIN)){
+  New-Item -Path QTBIN -ItemType "directory"
+}
+
 # Enter QT source directory
-Set-Location $env:QT_PATH
+Set-Location fetches/qt-everywhere-src-6.2.3/
 
 ./configure `
   -static  `
@@ -45,6 +49,7 @@ Set-Location $env:QT_PATH
   -feature-imageformat_png  `
   -qt-libpng  `
   -qt-zlib  `
+  -prefix ../../QT_OUT
 # TODO: openssl dep so we can link it. 
 #  -openssl-linked `
 #  -I $BUILD_TOOLS_DIR\include `
