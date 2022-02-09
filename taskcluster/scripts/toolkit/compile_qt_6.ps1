@@ -1,22 +1,8 @@
 
 
 # Enter the DEV Shell
-./$PSScriptRoot/enter_dev_shell.ps1
+. "$PSScriptRoot/enter_dev_shell.ps1"
 
-
-# Debugging stuff for basti 
-write-output("-- ENV --")
-gci env:* | sort-object name
-write-output("-- ENV --")
-write-output("-- DIR --")
-Get-ChildItem .
-Get-ChildItem fetches
-write-output("-- DIR --")
-write-output("-- PATH --")
-foreach ($path in $env:path -Split ";") {
-    Get-ChildItem -Path $path/*.exe -Name
-}
-write-output("-- PATH --")
 
 if(!(Test-Path QTBIN)){
   New-Item -Path QTBIN -ItemType "directory"

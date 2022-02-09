@@ -14,6 +14,8 @@ ls -ial
 echo "---"
 cd ../
 echo "---"
-ps -ExecutionPolicy Bypass taskcluster/scripts/toolchain/compile_qt_6.ps1   
+ls
+
+powershell.exe -ExecutionPolicy Bypass taskcluster/scripts/toolkit/compile_qt_6.ps1   
 
 python3 taskcluster/scripts/toolkit/test.py
