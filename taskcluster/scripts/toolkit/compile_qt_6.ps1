@@ -42,3 +42,6 @@ Set-Location fetches/qt-everywhere-src-6.2.3/
 #  -L $BUILD_TOOLS_DIR\lib `
  # -prefix QTBIN `
 
+ cmake --build . --parallel
+
+ cmake --install .

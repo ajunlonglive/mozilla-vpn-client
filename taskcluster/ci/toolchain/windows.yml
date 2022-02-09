@@ -57,6 +57,10 @@ windows-testing:
     worker:
         taskcluster-proxy: true
         max-run-time: 14400
+        artifacts:
+            - type: directory
+              name: qt6_win
+              path: QT_OUT
         env:
             PERL_PATH: fetches/perl/perl/bin
             VSSTUDIO_PATH: fetches/VisualStudio
