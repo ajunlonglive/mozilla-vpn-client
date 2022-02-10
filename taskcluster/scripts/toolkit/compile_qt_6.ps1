@@ -1,5 +1,6 @@
 
-
+echo("Available SDKS:")
+ Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\Include"
 # Enter the DEV Shell
 . "$PSScriptRoot/enter_dev_shell.ps1"
 
@@ -8,6 +9,7 @@ if(!(Test-Path QTBIN)){
   New-Item -Path QTBIN -ItemType "directory"
 }
 
+exit 0;
 # Enter QT source directory
 Set-Location fetches/qt-everywhere-src-6.2.3/
 
@@ -21,6 +23,7 @@ Set-Location fetches/qt-everywhere-src-6.2.3/
   -strip  `
   -silent  `
   -nomake tests  `
+  -nomake examples  `
   -make libs  `
   -no-sql-psql  `
   -qt-sqlite  `

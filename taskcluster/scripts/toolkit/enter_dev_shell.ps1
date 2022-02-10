@@ -8,11 +8,11 @@
 # and apply it into the current session
 
 #Paths where we can look for VSStudio
-$DEFAULT_PATHS =  "fetches/VisualStudio/", `
-                  "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional", `
+$DEFAULT_PATHS =  "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional", `
                   "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community", `
                   "C:\Program Files (x86)\Microsoft Visual Studio\2021\Professional", `
-                  "C:\Program Files (x86)\Microsoft Visual Studio\2021\Community"
+                  "C:\Program Files (x86)\Microsoft Visual Studio\2021\Community", `
+                  "fetches/VisualStudio/"
 
 
 foreach ($VS_STUDIO_PATH in $DEFAULT_PATHS) {
