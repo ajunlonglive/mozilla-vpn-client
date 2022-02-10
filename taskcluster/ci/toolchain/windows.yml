@@ -60,9 +60,8 @@ windows-testing:
         artifacts:
             - type: directory
               name: qt6_win
-              path: QT_OUT
-        env:
-            PERL_PATH: fetches/perl/perl/bin
-            VSSTUDIO_PATH: fetches/VisualStudio
-            QT_PATH: fetches/qt-everywhere-src-6.2.3
+              path: build/src/QT_OUT
+#            - type: directory
+#              name: cmakeFiles
+#              path: build/src/QTBIN/CMakeFiles
     worker-type: b-win2012

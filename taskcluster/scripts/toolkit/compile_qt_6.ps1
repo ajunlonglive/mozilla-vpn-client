@@ -1,19 +1,18 @@
-
-echo("Available SDKS:")
- Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\Include"
 # Enter the DEV Shell
-. "$PSScriptRoot/enter_dev_shell.ps1"
+. "fetches/VisualStudio/enter_dev_shell.ps1"
 
 
 if(!(Test-Path QTBIN)){
   New-Item -Path QTBIN -ItemType "directory"
 }
+if(!(Test-Path QT_OUT)){
+  New-Item -Path QTBIN -ItemType "directory"
+}
 
-exit 0;
 # Enter QT source directory
-Set-Location fetches/qt-everywhere-src-6.2.3/
+Set-Location QTBIN
 
-./configure `
+../fetches/qt-everywhere-src-6.2.3/configure `
   -static  `
   -opensource  `
   -release  `
@@ -38,7 +37,7 @@ Set-Location fetches/qt-everywhere-src-6.2.3/
   -feature-imageformat_png  `
   -qt-libpng  `
   -qt-zlib  `
-  -prefix ../../QT_OUT
+  -prefix ../QT_OUT
 # TODO: openssl dep so we can link it. 
 #  -openssl-linked `
 #  -I $BUILD_TOOLS_DIR\include `

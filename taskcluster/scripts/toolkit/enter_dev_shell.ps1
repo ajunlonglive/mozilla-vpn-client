@@ -7,26 +7,85 @@
 # Takes the first, records any ENV changes 
 # and apply it into the current session
 
+
+#TODO: PUT THIS INTO THE VSSTUDIO ZIP:#
+
 #Paths where we can look for VSStudio
-$DEFAULT_PATHS =  "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional", `
-                  "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community", `
-                  "C:\Program Files (x86)\Microsoft Visual Studio\2021\Professional", `
-                  "C:\Program Files (x86)\Microsoft Visual Studio\2021\Community", `
-                  "fetches/VisualStudio/"
+echo($PSScriptRoot)
 
 
-foreach ($VS_STUDIO_PATH in $DEFAULT_PATHS) {
-  "Checking: $VS_STUDIO_PATH"
-  $VC_VARS_PATH = $VS_STUDIO_PATH+"\VC\Auxiliary\Build\vcvars64.bat"
-  if(Test-Path $VC_VARS_PATH){
-    "Found $VC_VARS_PATH"
-    cmd.exe /c "call `"$VC_VARS_PATH`" && set > %temp%\vcvars.txt"
-    Get-Content "$env:temp\vcvars.txt" | Foreach-Object {
-      if ($_ -match "^(.*?)=(.*)$") {
-          Set-Content "env:\$($matches[1])" $matches[2]
-      }
-    }
-    write-host "`nVisual Studio 2019 Command Prompt variables set. ($VC_VARS_PATH)" -ForegroundColor Yellow
-    return;
-  }        
+$VS_STUDIO_LOCATION =resolve-path $PSScriptRoot
+$W10_SDK_PATH =  resolve-path "$PSScriptRoot\SDK"
+$W10_SDK_VERSION = "10.0.19041.0"
+$MSVC_VERSION ="14.30.30705"
+
+
+$INCLUDE_ADDS =   `
+                  "$W10_SDK_PATH\include\$W10_SDK_VERSION\ucrt;",`
+                  "$W10_SDK_PATH\include\$W10_SDK_VERSION\shared;",`
+                  "$W10_SDK_PATH\include\$W10_SDK_VERSION\um;",`
+                  "$W10_SDK_PATH\include\$W10_SDK_VERSION\winrt;",`
+                  "$W10_SDK_PATH\include\$W10_SDK_VERSION\cppwinrt;" ,`
+                  "$VS_STUDIO_LOCATION\DIA SDK\include\;",`
+                  "$VS_STUDIO_LOCATION\VC\Tools\MSVC\$MSVC_VERSION\ATLMFC\include;",`
+                  "$VS_STUDIO_LOCATION\VC\Tools\MSVC\$MSVC_VERSION\include;"
+
+$ENV:INCLUDE =""
+ForEach-Object -InputObject $INCLUDE_ADDS {
+  $ENV:INCLUDE +=$_
 }
+
+$LIB_ADDS = `
+    "$W10_SDK_PATH\lib\$W10_SDK_VERSION\ucrt\x64;" ,`
+    "$W10_SDK_PATH\lib\$W10_SDK_VERSION\um\x64;" ,`
+    "$VS_STUDIO_LOCATION\VC\Tools\MSVC\$MSVC_VERSION\ATLMFC\lib\x64;" ,`
+    "$VS_STUDIO_LOCATION\VC\Tools\MSVC\$MSVC_VERSION\lib\x64;" ,`
+    "$VS_STUDIO_LOCATION\DIA SDK\lib\amd64;"
+    
+$ENV:LIB =""
+ForEach-Object -InputObject $LIB_ADDS {
+  $ENV:LIB +=$_
+}
+
+$LIBPATH_ADDS =  `
+  "$W10_SDK_PATH\UnionMetadata\$W10_SDK_VERSION;" ,`
+  "$W10_SDK_PATH\References\$W10_SDK_VERSION;" ,`
+  "$VS_STUDIO_LOCATION\VC\Tools\MSVC\$MSVC_VERSION\ATLMFC\lib\x64;" ,`
+  "$VS_STUDIO_LOCATION\VC\Tools\MSVC\$MSVC_VERSION\lib\x64;" 
+
+$ENV:LIBPATH =""
+ForEach-Object -InputObject $LIBPATH_ADDS {
+    $ENV:LIBPATH +=$_
+}
+
+$PATH_ADDS = ";",`
+  "$VS_STUDIO_LOCATION\DIA SDK\bin\amd64;" ,`
+  "$W10_SDK_PATH\bin\$W10_SDK_VERSION\x64;" ,`
+  "$W10_SDK_PATH\bin\x64;",`
+  "$VS_STUDIO_LOCATION\VC\Tools\MSVC\$MSVC_VERSION\bin\HostX64\x64;",`
+  "$VS_STUDIO_LOCATION\Common7\IDE\VC\VCPackages;",`
+  "$VS_STUDIO_LOCATION\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;",`
+  "$VS_STUDIO_LOCATION\MSBuild\Current\Bin\amd64;",`
+  "$VS_STUDIO_LOCATION\Common7\IDE;",`
+  "$VS_STUDIO_LOCATION\Common7\Tools;",`
+  "$VS_STUDIO_LOCATION\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;",`
+  "$VS_STUDIO_LOCATION\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;"
+
+ForEach-Object -InputObject $PATH_ADDS {
+    $ENV:PATH+=$_
+}
+# Doing Powershell += apparently adds a whitespeace 
+# e.g. Path"...some.exe; C:/next.exe" which breaks cmd
+$env:PATH= $ENV:PATH -replace("; ",";")
+$env:LIBPATH= $ENV:LIBPATH -replace("; ",";")
+$env:LIB= $ENV:LIB -replace("; ",";")
+$env:INCLUDE= $ENV:INCLUDE -replace("; ",";")
+
+$ENV:UCRTVersion=$W10_SDK_VERSION
+$ENV:WindowsSDKLibVersion=$W10_SDK_VERSION
+$ENV:WindowsSDKVersion=$W10_SDK_VERSION
+$ENV:WindowsSdkVerBinPath="$W10_SDK_PATH\bin\$W10_SDK_PATH"
+
+
+
+write-host "Registered Windows SDK: $W10_SDK_VERSION"
